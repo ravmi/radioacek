@@ -1,5 +1,16 @@
 # radioacek
 Networking project that uses UNIX functions wrapped by C++.
+
+1. HOW TO BUILD:
+cd ${root_directory}
+mkdir build
+cd build
+cmake ..
+make
+
+You may also use make -j8 if you are not running the build on a washing machine (faster build)
+
+2. DESCRIPTION:
 The assigment in-depth description(in Polish mwahaha):
 
 === Zadanie 2 (duże) ===
