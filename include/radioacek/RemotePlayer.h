@@ -10,7 +10,7 @@
 #include "ParseException.h"
 #include "RemotePlayerException.h"
 #include "tcp_connection.h"
-#include "Listener.h"
+#include <radioacek/listener.h>
 #include <thread>
 #include <regex>
 #include <iostream>
@@ -149,7 +149,7 @@ public:
 
     string title() {
        manager.sendMessage("TITLE");
-       Listener l(manager.get_socket());
+       radioacek::Listener l({manager.get_socket()});
 
        if (l.listen(3000) < 0) {
           return "ERROR " + std::to_string(id) + string(" title not received");
