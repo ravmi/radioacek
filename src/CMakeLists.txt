@@ -12,34 +12,15 @@ find_package (Boost COMPONENTS REQUIRED regex)
 include_directories(${CMAKE_SOURCE_DIR}/include/radioacek)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+file(GLOB PLAYER_SRC
+    "util/*.cpp")
+file(GLOB MASTER_SRC
+    "util/*.cpp")
 
-set(SOURCE_FILES_PLAYER mainPlayer.cpp
-    Connection.cpp
-    UDPConnection.cpp
-    TCPConnection.cpp
-    BufferOverflowException.cpp
-    ConnectionError.cpp
-    Player.cpp
-    ServerClosedError.cpp
-    Timer.cpp)
-set(SOURCE_FILES_MASTER mainMaster.cpp
-    Connection.cpp
-    UDPConnection.cpp
-    TCPConnection.cpp
-    BufferOverflowException.cpp
-    ConnectionError.cpp
-    Player.cpp
-    ServerClosedError.cpp
-    ParseException.cpp
-    RemotePlayer.cpp
-    RemotePlayerCollection.cpp
-    RemotePlayerException.cpp
-    Listener.cpp
-    Timer.cpp)
-
-
-add_executable(player ${SOURCE_FILES_PLAYER})
-add_executable(master ${SOURCE_FILES_MASTER})
+add_executable(player main_player.cpp ${PLAYER_SRC})
+set_target_properties( player PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR} )
+add_executable(master main_master.cpp ${MASTER_SRC})
+set_target_properties( master PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR} )
 
 target_link_libraries(player ${Boost_LIBRARIES})
 target_link_libraries(master ${Boost_LIBRARIES})
