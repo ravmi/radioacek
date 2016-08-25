@@ -10,7 +10,12 @@ make;
 
 You may also use make -j8 if you are not running the build on a washing machine (faster build)
 
-2. DESCRIPTION:
+2. HOW TO TEST:
+Two ways:
+build/test/{pick_some_test}
+or less verbose: make test in build dir
+
+3. DESCRIPTION:
 The assigment in-depth description(in Polish mwahaha):
 
 === Zadanie 2 (duże) ===
