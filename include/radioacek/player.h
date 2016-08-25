@@ -6,7 +6,7 @@
 #define SIECI2_PLAYER_H
 
 #include<string>
-#include "TCPConnection.h"
+#include <radioacek/tcp_connection.h>
 #include <boost/regex.hpp>
 #include<poll.h>
 

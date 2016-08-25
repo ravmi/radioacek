@@ -1,7 +1,7 @@
 #include <stdint.h>
 #include <iostream>
-#include "TCPConnection.h"
-#include "RemotePlayerCollection.h"
+#include <radioacek/tcp_connection.h>
+#include <radioacek/remote_player_collection.h>
 #include <boost/regex.hpp>
 
 #include <string>

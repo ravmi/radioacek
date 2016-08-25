@@ -8,8 +8,8 @@
 
 class Connection {
 
-
 public:
+
     int nsocket;
     Connection() {
        nsocket = -1;

@@ -9,7 +9,7 @@
 #include "UDPConnection.h"
 #include "ParseException.h"
 #include "RemotePlayerException.h"
-#include "TCPConnection.h"
+#include "tcp_connection.h"
 #include "Listener.h"
 #include <thread>
 #include <regex>
