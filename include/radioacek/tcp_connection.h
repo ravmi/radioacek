@@ -1,3 +1,13 @@
+/**
+ *    Wrapper for UNIX TCP connection.
+ *    Whether waits for incoming connection or connects to a server
+ *    (both functions are blocking).
+ *    Then communicates by receiving and sending messages
+ */
+
+#ifndef RADIO_ACEK_TCP_CONNECTION
+#define RADIO_ACEK_TCP_CONNECTION
+
 #include <sys/types.h>
 #include<stdlib.h> /* strtol */
 #include<string.h> /* strlen */
@@ -17,12 +27,12 @@
 #include "ConnectionError.h"
 #include "ServerClosedError.h"
 #include<string>
+#include <string.h>
 #include<iostream>
+#include <cerrno>
 
 
 
-#ifndef SIECI2_TCPCONNECTION_H
-#define SIECI2_TCPCONNECTION_H
 
 
 using std::string;
@@ -76,7 +86,7 @@ public:
     }
 
     /* Return port */
-    uint16_t serve(uint16_t port = 0) {
+    uint16_t serve(uint16_t port) {
        struct sockaddr_in server_address;
 
        this->nsocket = socket(PF_INET, SOCK_STREAM, 0);
@@ -119,7 +129,10 @@ public:
     }
 
     ssize_t sendMessage(const char *message, size_t length) {
-       return write(nsocket, message, length);
+        int written = write(nsocket, message, length);
+        if(written < 0)
+            throw ConnectionError(strerror(errno));
+        return written;
     }
 
     size_t receiveMessage(size_t size = 0) {
@@ -166,4 +179,4 @@ public:
 };
 
 
-#endif //SIECI2_TCPCONNECTION_H
+#endif

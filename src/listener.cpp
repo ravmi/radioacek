@@ -31,13 +31,14 @@ Listener::Listener(const std::vector<int>& descriptors) {
 int Listener::listen(int timeout) {
     int noise = poll(ears.data(), ears.size(), timeout);
     if (noise > 0) {
-        while (next_to_listen < ears.size()) {
+        while (next_to_listen < (int)ears.size()) {
             if (hears(ears[next_to_listen])) {
                 forget(ears[next_to_listen]);
                 return ears[next_to_listen++].fd;
             }
             next_to_listen = (next_to_listen + 1) % ears.size();
         }
+        throw ConnectionError(std::string("Poll error"));
     }
     else if (noise == 0/* timeout */) {
         return -1;

@@ -18,6 +18,7 @@
 
 
 
+    using std::to_string;
 class Player {
 public:
     struct pollfd poll_array[2]; //first one is master, second radio server

@@ -31,6 +31,17 @@ public:
     struct sockaddr_in server_address;
     struct sockaddr_in client_address;
 
+    uint16_t client_port() {
+        return ntohs(client_address.sin_port);
+    }
+    uint16_t last_client_port() {
+        return ntohs(client_address.sin_port);
+    }
+    uint16_t server_port() {
+        return ntohs(server_address.sin_port);
+    }
+
+
 
     UDPConnection() : Connection() {
        flags = 0;
@@ -98,7 +109,7 @@ public:
     }
 
 
-    string receiveMessage(unsigned int length = BUFFER_SIZE, bool replace_last_client = true) {
+    string receiveMessage(unsigned int length = BUFFER_SIZE) {
        char buffer[BUFFER_SIZE];
 
        struct sockaddr_in new_client_address;
@@ -110,8 +121,7 @@ public:
           throw (ConnectionError(strerror(errno)));
        else if (receive_len == 0)
           throw ServerClosedError("closed when receiving a message");
-       if (replace_last_client)
-          client_address = new_client_address;
+       client_address = new_client_address;
        return string(buffer, (unsigned int) receive_len);
     }
 

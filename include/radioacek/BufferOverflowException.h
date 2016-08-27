@@ -10,13 +10,12 @@
 #include <string>
 #include <exception>
 using std::string;
-using std::to_string;
 using std::exception;
 class BufferOverflowException: public exception{
 public:
     string message;
     BufferOverflowException(size_t left, size_t tried_to):
-            message(string("Tried to read: ") + to_string(tried_to) + string("free: ") + to_string(left))   {
+            message(string("Tried to read: ") + std::to_string(tried_to) + string("free: ") + std::to_string(left))   {
 
     }
         virtual const char* what() const throw()
