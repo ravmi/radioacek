@@ -6,7 +6,7 @@
 #define SIK_REMOTEPLAYER_H
 
 
-#include "UDPConnection.h"
+#include "udp_connection.h"
 #include "ParseException.h"
 #include "RemotePlayerException.h"
 #include "tcp_connection.h"
@@ -24,7 +24,7 @@ using std::cout;
 using std::cerr;
 using std::endl;
 using std::stoi;
-
+namespace radioacek {
 class RemotePlayer {
 
 private:
@@ -174,6 +174,7 @@ public:
        manager.connect(server_name, server_port);
     }
 };
+}
 
 
 #endif //SIK_REMOTEPLAYER_H

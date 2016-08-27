@@ -10,6 +10,7 @@
 #include <vector>
 
 
+namespace radioacek {
 class RemotePlayerCollection {
 
 private:
@@ -82,6 +83,7 @@ public:
 
 
 };
+}
 
 
 #endif //SIK_REMOTEPLAYERVECTOR_H

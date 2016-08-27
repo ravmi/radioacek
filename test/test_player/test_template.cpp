@@ -29,21 +29,6 @@ protected:
 
     // The mock bar library shaed by all tests
 };
-TEST(FooTest, testListener) {
-    using namespace radioacek;
-    int a = 1;
-std::vector<int> b;
-    b.push_back(a);
-    Listener lis(b);
-    std::cout << "hehe"<<std::endl;
-    std::cerr << "hehe"<<std::endl;
-    EXPECT_EQ(false, true);
+TEST(FooTest, test_without_setup) {
 }
 
-TEST(FooTest, ByDefaultBazFalseIsFalse) {
-    EXPECT_EQ(true, true);
-}
-
-TEST(FooTest, SometimesBazFalseIsTrue) {
-    EXPECT_EQ(true, true);
-}

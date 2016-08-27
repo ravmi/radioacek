@@ -10,7 +10,7 @@
 #include <boost/regex.hpp>
 #include<poll.h>
 
-#include "UDPConnection.h"
+#include "udp_connection.h"
 #include "Timer.h"
 #include <ctime>
 
@@ -31,7 +31,7 @@ public:
     bool read_metadata;
     int outdesc;
     TCPConnection radio_connection;
-    UDPConnection master_connection;
+    radioacek::UDPConnection master_connection;
     unsigned long data_segment_size;
     string stream_title;
 

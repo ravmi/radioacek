@@ -47,14 +47,11 @@ public:
 
 protected:
     char buffer[BUFFER_SIZE + 1];
-    size_t end;
+    size_t end = 0;
 
 public:
+    TCPConnection() = default;
 
-
-    TCPConnection() : Connection() {
-       end = 0;
-    }
 
     void connect(string host_name, const char *c_port) {
        const char *c_host_name = host_name.c_str();

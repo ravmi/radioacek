@@ -16,6 +16,7 @@ using std::to_string;
 using std::thread;
 using namespace boost;
 
+namespace radioacek {
 uint16_t parse_port(string sport) {
    try {
       int iport = std::stoi(sport);
@@ -144,6 +145,8 @@ void telnet_serve(std::shared_ptr<TCPConnection> telnet) {
    }
 }
 
+}
+using namespace radioacek;
 int main(int argc, char **argv) {
    uint16_t port;
    switch (argc) {

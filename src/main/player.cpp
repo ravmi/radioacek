@@ -8,6 +8,7 @@
 #include <fcntl.h>
 
 using namespace std;
+using namespace radioacek;
 using std::stoi;
 #define PORT_LIMIT 65535
 int main(int argc, char **argv) {
@@ -111,4 +112,3 @@ int main(int argc, char **argv) {
         exit(1);
     }
 }
-
