@@ -88,5 +88,15 @@ TEST(UDPTest, MultipleClientsCommunication) {
     dos_thread.join();
     tres_thread.join();
 }
+/*
+TEST(UDPTest, IsBlocking) {
+    radioacek::UDPConnection server;
+    int server_port = 12014;
+    server.serve(server_port);
 
-
+    std::thread uno_thread(say_the_word_and_repeat_with_your_port, "uno", server_port);
+    std::cout<<server.receiveMessage(1)<<std::endl;
+    server.receiveMessage();
+    std::cout <<"received"<<std::endl;
+}
+*/

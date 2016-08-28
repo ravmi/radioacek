@@ -50,22 +50,22 @@ class TCPConnection {
             return buffer_free_index;
         }
 
-        /* two ways to start connection, both are blocking */
+        /* two ways to start the connection */
         void connect(std::string host_name, uint16_t port);
+        /* blocking if no one connects to mediator */
         TCPConnection(TCPMediator &listener);
 
         ssize_t sendMessage(std::string message);
         ssize_t sendMessage(const char *message, size_t length);
         /* size = 0 is actually a full buffer */
-        /* funcion is blocking when there is nothing to read */
-        /* notice receive_message(1) is always blocking when there is no data*/
+        /* function is blocking if there is nothing to read */
         size_t receiveMessage(size_t size = 0);
         void receive_message_blocking(size_t size);
 
         char last_char();
         char pop_char();
         /*  Doesn't copy the buffer, may be dangerous
-         *  (modified by the next receiveMessage) */
+         *  (if modified by the next receiveMessage) */
         char* cFlush();
         std::string stringFlush();
 };

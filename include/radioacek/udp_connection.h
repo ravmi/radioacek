@@ -39,7 +39,9 @@ class UDPConnection {
 
         void serve(uint16_t listen_port = 0);
         void connect(const std::string server_name, const uint16_t server_port);
-        /* receives the message from the last host that contacted you */
+        /* receives the message from the last host that contacted you
+         * blocking if there is no message*/
+        /* if limit is too small the end of the message will be lost */
         std::string receiveMessage(unsigned int limit = BUFFER_SIZE);
         /* Sends a message to the last host that contacted you */
         ssize_t sendMessage(std::string message);

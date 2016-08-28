@@ -10,7 +10,8 @@
 using namespace radioacek;
 using namespace std;
 
-    std::mutex server_started;
+std::mutex server_started;
+const unsigned long int seed = 1472352785;
 // The fixture for testing class Foo.
 class TCPTest : public ::testing::Test {
 
@@ -54,7 +55,7 @@ void server_speaking_english(uint16_t port) {
 }
 
 TEST(TCPTest, MultipleClientsTest) {
-    int port = 12002;
+    int port = rand() % 60000 + 1024;
     std::thread english_thread(server_speaking_english, port);
     english_thread.detach();
     sleep(1);
@@ -92,8 +93,9 @@ void server_spamming(uint16_t port) {
 }
 
 TEST(TCPTest, SpammingServerTest) {
-    int port = 11000;
-    std::thread english_thread(server_speaking_english, port);
+    
+    int port = rand() % 60000 + 1024;
+    std::thread english_thread(server_spamming, port);
     english_thread.detach();
     sleep(1);
 
