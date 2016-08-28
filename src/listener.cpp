@@ -9,6 +9,7 @@
 
 #include <cstring>
 #include <cerrno>
+#include <cassert>
 
 #include <radioacek/exceptions.h>
 #include <radioacek/listener.h>
@@ -28,13 +29,16 @@ Listener::Listener(const std::vector<int>& descriptors) {
     }
 }
 
-int Listener::listen(int timeout) {
-    int noise = poll(ears.data(), ears.size(), timeout);
+int Listener::listen(const double timeout) {
+    int noise = poll(ears.data(), ears.size(), (int)(timeout * 1000));
     if (noise > 0) {
         while (next_to_listen < (int)ears.size()) {
             if (hears(ears[next_to_listen])) {
                 forget(ears[next_to_listen]);
-                return next_to_listen++;
+                assert(next_to_listen < ears.size());
+                int active = next_to_listen;
+                next_to_listen = (next_to_listen + 1) % ears.size();
+                return active;
             }
             next_to_listen = (next_to_listen + 1) % ears.size();
         }

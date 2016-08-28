@@ -147,6 +147,12 @@ char* TCPConnection::cFlush() {
     buffer_free_index = 0;
     return buffer_;
 }
+
+char* TCPConnection::c_flush() {
+    buffer_[buffer_free_index] = '\0';
+    buffer_free_index = 0;
+    return buffer_;
+}
 string TCPConnection::stringFlush() {
     size_t length = buffer_free_index;
     buffer_free_index = 0;

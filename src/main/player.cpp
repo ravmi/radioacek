@@ -57,7 +57,7 @@ int main(int argc, char **argv) {
 
     int listen_port;
     try {
-        listen_port = stoi(c_listen_port);
+        listen_port = std::stoi(c_listen_port);
     } catch (exception &e) {
         cerr << "Wrong listen port" << endl;
         exit(1);
@@ -77,19 +77,11 @@ int main(int argc, char **argv) {
         exit(1);
     }
 
-    int outdesc = 1;
-    if (string(c_file) != string("-")) {
-        if ((outdesc = open(c_file, O_RDWR | O_CREAT, 0777)) < 0) {
-            cerr << "Couldn't create a file" << endl;
-            exit(1);
-        }
-
-    }
 
     string path(c_path);
 
 
-    Player rad(outdesc);
+    Player rad(c_file);
     try {
         rad.connect(server_name, path, (uint16_t) server_port);
         rad.findMaster((uint16_t) listen_port);

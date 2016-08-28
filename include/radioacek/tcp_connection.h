@@ -68,6 +68,7 @@ class TCPConnection {
         /*  Doesn't copy the buffer, may be dangerous
          *  (if modified by the next receiveMessage) */
         char* cFlush();
+        char* c_flush();
         std::string stringFlush();
 };
 }
