@@ -58,16 +58,18 @@ TEST(TCPTest, MultipleClientsTest) {
     int port = rand() % 60000 + 1024;
     std::thread english_thread(server_speaking_english, port);
     english_thread.detach();
-    sleep(1);
 
+    sleep(1);
     TCPConnection tcp;
     tcp.connect("localhost", port);
     tcp.sendMessage("cat");
 
+    sleep(1);
     TCPConnection tcp2;
     tcp2.connect("localhost", port);
     tcp2.sendMessage("dog");
 
+    sleep(1);
     TCPConnection tcp3;
     tcp3.connect("localhost", port);
     tcp3.sendMessage("bird");

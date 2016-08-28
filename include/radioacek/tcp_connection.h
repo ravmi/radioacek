@@ -11,6 +11,7 @@
 
 #include <string>
 namespace radioacek {
+
 class TCPMediator {
     private:
         int socket_ = -1;

@@ -40,7 +40,7 @@ public:
 
 
 /* Serious error */
-class ParseException : std::exception{
+class ParseException : public std::exception{
 
     std::string message;
 public:
@@ -69,7 +69,7 @@ public:
 
 
 /* Not an actual error, program may continue */
-class ServerClosed {
+class ServerClosed : public std::exception{
 public:
     std::string message;
     ServerClosed(std::string mes):

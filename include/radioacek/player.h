@@ -8,7 +8,7 @@
 #include <boost/regex.hpp>
 #include<poll.h>
 
-#include "Timer.h"
+#include <radioacek/timer.h>
 
 #include <radioacek/tcp_connection.h>
 #include <radioacek/udp_connection.h>
@@ -28,7 +28,6 @@ using namespace std;
 
 
 
-using std::to_string;
 namespace radioacek {
 class Player {
 public:
@@ -67,27 +66,27 @@ public:
 
     void connect(string server_name, string path, uint16_t server_port) {
 
-       string init;
-       init += "GET " + path + " HTTP/1.0\r\n";
-       init += "Host: " + server_name + "\r\n";
-       init += "User-Agent: MPlayer 2.0-728-g2c378c7-4build1\r\n";
-       init += "Icy-MetaData:" + to_string(read_metadata) + "\r\n";
-       init += "\r\n";
-       this->radio_connection.connect(server_name.c_str(), server_port);
-       this->radio_connection.sendMessage(init);
-       string answer;
-       try {
-          size_t received = 0;
-          while (received < 4)
-             received += radio_connection.receiveMessage(4 - received);
-          answer = string(radio_connection.cFlush(), received);
-          string end_seqence("\r\n\r\n");
-          while (answer.substr(answer.length() - 4, 4) != end_seqence) {
-             radio_connection.receiveMessage(1);
-             answer += string(radio_connection.cFlush(), 1);
-          }
-       } catch (ServerClosed &e) {
-          std::cerr << "Radio server closed" << std::endl;
+        string init =
+            "GET " + path + " HTTP/1.0\r\n"
+            "Host: " + server_name + "\r\n"
+            "User-Agent: MPlayer 2.0-728-g2c378c7-4build1\r\n"
+            "Icy-MetaData:" + to_string(read_metadata) + "\r\n"
+            "\r\n";
+        this->radio_connection.connect(server_name.c_str(), server_port);
+        this->radio_connection.sendMessage(init);
+        string answer;
+        try {
+            size_t received = 0;
+            while (received < 4)
+                received += radio_connection.receiveMessage(4 - received);
+            answer = string(radio_connection.cFlush(), received);
+            string end_seqence("\r\n\r\n");
+            while (answer.substr(answer.length() - 4, 4) != end_seqence) {
+                radio_connection.receiveMessage(1);
+                answer += string(radio_connection.cFlush(), 1);
+            }
+        } catch (ServerClosed &e) {
+            std::cerr << "Radio server closed" << std::endl;
           exit(0);
        }
        catch (ConnectionError &e) {
@@ -138,7 +137,7 @@ public:
           using std::cerr;
           using std::endl;
           if (poll_array[0].revents & POLL_IN) {
-             if(t.check()) {
+             if(t.passed()) {
                 throw ServerClosed("Server timeout");
              }
              string command(master_connection.receiveMessage(6));
