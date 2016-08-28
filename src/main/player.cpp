@@ -81,7 +81,7 @@ int main(int argc, char **argv) {
     string path(c_path);
 
 
-    Player rad(c_file);
+    Player rad(c_file, metadata);
     try {
         rad.connect(server_name, path, (uint16_t) server_port);
         rad.findMaster((uint16_t) listen_port);

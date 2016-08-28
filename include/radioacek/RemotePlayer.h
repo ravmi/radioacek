@@ -55,8 +55,15 @@ public:
        start.detach();
     }
 
-    RemotePlayer(string server, int port, string command, int id, std::shared_ptr<TCPConnection> telnet, int hour,
-                 int minutes, int timetokill) :
+    RemotePlayer(
+            string server,
+            int port,
+            string command,
+            int id,
+            std::shared_ptr<TCPConnection> telnet,
+            int hour,
+            int minutes,
+            int timetokill) :
             server_name(server), id(id), server_port(port), telnet(telnet), hour(hour), minutes(minutes),
             timetokill(timetokill) {
        string com(
