@@ -73,7 +73,7 @@ public:
        init += "User-Agent: MPlayer 2.0-728-g2c378c7-4build1\r\n";
        init += "Icy-MetaData:" + to_string(read_metadata) + "\r\n";
        init += "\r\n";
-       this->radio_connection.connect(server_name.c_str(), to_string(server_port).c_str());
+       this->radio_connection.connect(server_name.c_str(), server_port);
        this->radio_connection.sendMessage(init);
        string answer;
        try {
@@ -86,7 +86,7 @@ public:
              radio_connection.receiveMessage(1);
              answer += string(radio_connection.cFlush(), 1);
           }
-       } catch (ServerClosedError &e) {
+       } catch (ServerClosed &e) {
           std::cerr << "Radio server closed" << std::endl;
           exit(0);
        }
@@ -139,7 +139,7 @@ public:
           using std::endl;
           if (poll_array[0].revents & POLL_IN) {
              if(t.check()) {
-                throw ServerClosedError("Server timeout");
+                throw ServerClosed("Server timeout");
              }
              string command(master_connection.receiveMessage(6));
              if (command == string("PLAY")) {
@@ -164,7 +164,7 @@ public:
              t.reset();
           }
           if (!(poll_array[0].revents & POLL_IN) && !(poll_array[1].revents & POLL_IN)) {
-             throw ServerClosedError("Radio server not responding");
+             throw ServerClosed("Radio server not responding");
           }
 
        }

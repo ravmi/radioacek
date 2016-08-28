@@ -132,7 +132,7 @@ void telnet_serve(std::shared_ptr<TCPConnection> telnet) {
          telnet->sendMessage("ERROR: connection: " + string(e.what()) + "\n");
          return;
       }
-      catch (ServerClosedError &e) {
+      catch (ServerClosed &e) {
          telnet->sendMessage("ERROR: server closed: " + string(e.what()) + "\n");
          return;
       }

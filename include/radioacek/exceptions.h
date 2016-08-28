@@ -1,3 +1,10 @@
+/**
+ *   Errors used in the project, some of them are serious and
+ *   lead to termination of the program, some should should be catched
+ *   and dealt with
+ *   @TODO divide then into these groups
+ */
+
 #ifndef RADIOACEK_EXCEPTIONS_H
 #define RADIOACEK_EXCEPTIONS_H
 
@@ -5,6 +12,7 @@
 #include <string>
 #include <exception>
 
+/* Serious error */
 class BufferOverflowException: public std::exception{
 public:
     std::string message;
@@ -18,7 +26,7 @@ public:
         }
 };
 
-/* This is wrong, server is doing something strange and we should close */
+/* Serious error */
 class ConnectionError: public std::exception{
 public:
     std::string message;
@@ -31,6 +39,7 @@ public:
 };
 
 
+/* Serious error */
 class ParseException : std::exception{
 
     std::string message;
@@ -44,6 +53,7 @@ public:
 };
 
 
+/* Serious error */
 class RemotePlayerException: public std::exception{
 
 public:
@@ -58,11 +68,11 @@ public:
 };
 
 
-/* This is ok, server timed out or closed the connection */
-class ServerClosedError {
+/* Not an actual error, program may continue */
+class ServerClosed {
 public:
     std::string message;
-    ServerClosedError(std::string mes):
+    ServerClosed(std::string mes):
             message(mes)   {}
     virtual const char* what() const throw()
     {

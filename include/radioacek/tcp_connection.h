@@ -33,6 +33,7 @@ class TCPConnection {
     private:
         static const unsigned int BUFFER_SIZE = 131072;
 
+        bool connected_ = false;
         int socket_ = -1;
         /* +1 for \0 in c string */
         char buffer_[BUFFER_SIZE + 1];
@@ -49,13 +50,17 @@ class TCPConnection {
             return buffer_free_index;
         }
 
-        /* all five below are blocking */
-        void connect(std::string host_name, const char *c_port);
+        /* two ways to start connection, both are blocking */
+        void connect(std::string host_name, uint16_t port);
         TCPConnection(TCPMediator &listener);
+
         ssize_t sendMessage(std::string message);
         ssize_t sendMessage(const char *message, size_t length);
-        /* size = 0 is actually full buffer, shouldn't be used */
+        /* size = 0 is actually a full buffer */
+        /* funcion is blocking when there is nothing to read */
+        /* notice receive_message(1) is always blocking when there is no data*/
         size_t receiveMessage(size_t size = 0);
+        void receive_message_blocking(size_t size);
 
         char last_char();
         char pop_char();

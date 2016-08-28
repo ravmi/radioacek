@@ -5,6 +5,7 @@
 
 #include <radioacek/tcp_connection.h>
 #include <radioacek/exceptions.h>
+#include <cassert>
 
 using std::string;
 using std::to_string;
@@ -38,7 +39,8 @@ TCPMediator::TCPMediator(uint16_t port) {
     }
     port_ = ntohs(server_address.sin_port);
 }
-void TCPConnection::connect(string host_name, const char *c_port) {
+void TCPConnection::connect(string host_name, uint16_t port) {
+    string port_string = to_string(port);
 
     struct addrinfo addr_hints;
     struct addrinfo *addr_result;
@@ -47,7 +49,7 @@ void TCPConnection::connect(string host_name, const char *c_port) {
     addr_hints.ai_family = AF_INET; // IPv4
     addr_hints.ai_socktype = SOCK_STREAM;
     addr_hints.ai_protocol = IPPROTO_TCP;
-    if (getaddrinfo(host_name.c_str(), c_port, &addr_hints, &addr_result))
+    if (getaddrinfo(host_name.c_str(), port_string.c_str(), &addr_hints, &addr_result))
         throw ConnectionError(("Wrong host info"));
 
     socket_ = ::socket(
@@ -60,6 +62,7 @@ void TCPConnection::connect(string host_name, const char *c_port) {
     if (::connect(socket_, addr_result->ai_addr, addr_result->ai_addrlen) < 0)
         throw (ConnectionError("Couldn't find host"));
     freeaddrinfo(addr_result);
+    connected_ = true;
 }
 /*
    void TCPConnection::disconnect() {
@@ -81,9 +84,11 @@ TCPConnection::TCPConnection(TCPMediator &listener) {
         throw (ConnectionError("Couldn't accept"));
     this->socket_ = msg_sock;
     buffer_free_index = 0;
+    connected_ = true;
 }
 
 ssize_t TCPConnection::sendMessage(string message) {
+    assert(connected_);
     size_t length = message.size();
     const char *c_message = message.c_str();
     ssize_t ret = write(socket_, c_message, length);
@@ -94,6 +99,7 @@ ssize_t TCPConnection::sendMessage(string message) {
 }
 
 ssize_t TCPConnection::sendMessage(const char *message, size_t length) {
+    assert(connected_);
     int written = write(socket_, message, length);
     if(written < 0)
         throw ConnectionError(strerror(errno));
@@ -101,18 +107,26 @@ ssize_t TCPConnection::sendMessage(const char *message, size_t length) {
 }
 
 size_t TCPConnection::receiveMessage(size_t size) {
+    assert(connected_);
     if (size == 0)
         size = BUFFER_SIZE - buffer_free_index;
     if (size > (BUFFER_SIZE - buffer_free_index))
         throw BufferOverflowException(this->BUFFER_SIZE - buffer_free_index, size);
     int r = (size_t) read(socket_, buffer_ + buffer_free_index, size);
     if (r == 0)
-        throw (ServerClosedError("while receiving a message"));
+        throw (ServerClosed("while receiving a message"));
     if (r < 0)
         throw (ConnectionError(strerror(errno)));
     else {
         buffer_free_index += r;
         return r;
+    }
+}
+
+void TCPConnection::receive_message_blocking(size_t size) {
+    while(size) {
+        receiveMessage(1);
+        --size;
     }
 }
 

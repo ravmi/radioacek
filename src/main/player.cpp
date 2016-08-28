@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
     try {
         rad.connect(server_name, path, (uint16_t) server_port);
         rad.findMaster((uint16_t) listen_port);
-    } catch(ServerClosedError& e) {
+    } catch(ServerClosed& e) {
         cerr << e.what() << endl;
         exit(0);
     }
@@ -103,7 +103,7 @@ int main(int argc, char **argv) {
     }
     try {
         rad.play();
-    } catch(ServerClosedError &e) {
+    } catch(ServerClosed& e) {
         cerr << e.what() << endl;
         exit(0);
     }

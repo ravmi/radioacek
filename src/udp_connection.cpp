@@ -110,7 +110,7 @@ std::string UDPConnection::receiveMessage(unsigned int limit) {
     if (receive_len < 0)
         throw (ConnectionError(strerror(errno)));
     else if (receive_len == 0)
-        throw ServerClosedError("Closed when receiving a message");
+        throw ServerClosed("Closed when receiving a message");
 
 
     speaker_address_ = new_speaker_address;
