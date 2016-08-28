@@ -9,11 +9,9 @@
 #include <string.h>
 #include <cassert>
 
-#include "radioacek/ConnectionError.h"
-#include "radioacek/BufferOverflowException.h"
-#include "radioacek/ServerClosedError.h"
+#include <radioacek/exceptions.h>
 #include <radioacek/udp_connection.h>
-
+using namespace std;
 namespace radioacek {
 
 void UDPConnection::serve(uint16_t listen_port) {
@@ -36,6 +34,15 @@ void UDPConnection::serve(uint16_t listen_port) {
             (socklen_t) sizeof(my_address_));
     if (bind_ret < 0)
         throw ConnectionError("Bind error");
+
+	struct sockaddr_in new_my_address;
+	socklen_t new_my_address_length = sizeof(new_my_address);
+	if (getsockname(
+				socket_,
+				(struct sockaddr *)& new_my_address,
+				&new_my_address_length) == -1)
+		throw (ConnectionError(strerror(errno)));
+	my_address_ = new_my_address;
     serving_ = true;
 }
 /**
@@ -75,7 +82,7 @@ void UDPConnection::connect(const std::string server_name, const uint16_t server
                 NULL,
                 &addr_hints,
                 &addr_result) != 0)
-        throw (ConnectionError(string(strerror(errno))));
+        throw (ConnectionError(std::string(strerror(errno))));
     /* IPv4 */
     speaker_address_.sin_family = AF_INET;
     /* IP address */

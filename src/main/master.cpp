@@ -55,22 +55,22 @@ void telnet_serve(std::shared_ptr<TCPConnection> telnet) {
          do {
             telnet->receiveMessage(1);
             previous = last;
-            last = telnet->last();
+            last = telnet->last_char();
             if(last == 255) {
-               telnet -> back();
+               telnet -> pop_char();
                telnet -> receiveMessage(1);
-               last = telnet -> last();
+               last = telnet -> last_char();
                if(last >= 251 && last <= 254) {
-                  telnet -> back();
+                  telnet -> pop_char();
                   telnet -> receiveMessage(1);
-                  telnet -> back();
+                  telnet -> pop_char();
                }
                else if(last != 255)
-                  telnet -> back();
-               last = telnet -> last();
+                  telnet -> pop_char();
+               last = telnet -> last_char();
             }
             if (telnet->size() == 60000) {
-               telnet->flush();
+               telnet->cFlush();
                correct = false;
             }
          } while (!(last == '\n' || (previous == '\r' && last == '\n') || (previous == '\r' && last == '\0')));
@@ -126,7 +126,7 @@ void telnet_serve(std::shared_ptr<TCPConnection> telnet) {
             }
          }
          else
-            telnet->flush();
+            telnet->cFlush();
 
       } catch (ConnectionError &e) {
          telnet->sendMessage("ERROR: connection: " + string(e.what()) + "\n");
@@ -163,8 +163,8 @@ int main(int argc, char **argv) {
          exit(1);
       }
    }
-   TCPConnection gate;
-   uint16_t new_port = gate.serve(port);
+   TCPMediator gate;
+   uint16_t new_port = gate.get_port();
    if (port == 0)
       cerr << "Listening on port: " << new_port << endl;
    while (true) {

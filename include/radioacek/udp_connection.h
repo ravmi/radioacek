@@ -37,7 +37,7 @@ class UDPConnection {
             return socket_;
         }
 
-        void serve(uint16_t listen_port);
+        void serve(uint16_t listen_port = 0);
         void connect(const std::string server_name, const uint16_t server_port);
         /* receives the message from the last host that contacted you */
         std::string receiveMessage(unsigned int limit = BUFFER_SIZE);

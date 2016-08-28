@@ -8,12 +8,12 @@
 
 
 // The fixture for testing class Foo.
-class TCPTest : public ::testing::Test {
+class UDPTest : public ::testing::Test {
 
 protected:
 
     // You can do set-up work for each test here.
-    TCPTest() {
+    UDPTest() {
     }
 /**
     // You can do clean-up work that doesn't throw exceptions here.
@@ -43,7 +43,7 @@ void speak_french(int port) {
     client.sendMessage("trois");
     EXPECT_EQ(client.receiveMessage(), "six");
 }
-TEST(TCPTest, SingleClientCommunication) {
+TEST(UDPTest, SingleClientCommunication) {
     radioacek::UDPConnection server;
     int server_port = 12012;
     server.serve(server_port);
@@ -65,7 +65,7 @@ void say_the_word_and_repeat_with_your_port(std::string word, int server_port) {
     EXPECT_EQ(client.receiveMessage(), word + std::to_string(client.my_port()));
 }
 
-TEST(TCPTest, MultipleClientsCommunication) {
+TEST(UDPTest, MultipleClientsCommunication) {
     radioacek::UDPConnection server;
     int server_port = 12013;
     server.serve(server_port);

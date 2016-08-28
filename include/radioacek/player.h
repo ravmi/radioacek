@@ -5,20 +5,31 @@
 #ifndef SIECI2_PLAYER_H
 #define SIECI2_PLAYER_H
 
-#include<string>
-#include <radioacek/tcp_connection.h>
 #include <boost/regex.hpp>
 #include<poll.h>
 
-#include "udp_connection.h"
 #include "Timer.h"
-#include <ctime>
+
+#include <radioacek/tcp_connection.h>
+#include <radioacek/udp_connection.h>
+#include <radioacek/exceptions.h>
+
+#include<signal.h>
+#include<string>
+#include<iostream>
+#include <cerrno>
 
 
 
 
 
-    using std::to_string;
+using namespace std;
+
+
+
+
+using std::to_string;
+namespace radioacek {
 class Player {
 public:
     struct pollfd poll_array[2]; //first one is master, second radio server
@@ -30,7 +41,7 @@ public:
     bool playing;
     bool read_metadata;
     int outdesc;
-    TCPConnection radio_connection;
+    radioacek::TCPConnection radio_connection;
     radioacek::UDPConnection master_connection;
     unsigned long data_segment_size;
     string stream_title;
@@ -69,11 +80,11 @@ public:
           size_t received = 0;
           while (received < 4)
              received += radio_connection.receiveMessage(4 - received);
-          answer = string(radio_connection.flush(), received);
+          answer = string(radio_connection.cFlush(), received);
           string end_seqence("\r\n\r\n");
           while (answer.substr(answer.length() - 4, 4) != end_seqence) {
              radio_connection.receiveMessage(1);
-             answer += string(radio_connection.flush(), 1);
+             answer += string(radio_connection.cFlush(), 1);
           }
        } catch (ServerClosedError &e) {
           std::cerr << "Radio server closed" << std::endl;
@@ -97,7 +108,7 @@ public:
           int server_response_code;
           try {
              server_response_code = std::stoi(string(result[1]));
-          } catch (exception &e) {
+          } catch (std::exception &e) {
              throw ConnectionError("Something very bad happend while parsing server response");
           }
           if (server_response_code != 200)
@@ -174,16 +185,16 @@ public:
                 // std::cerr << "received music part: " << received << std::endl;
                 if (playing) {
                    size_t len = radio_connection.size();
-                   write(outdesc, radio_connection.flush(), len);
+                   write(outdesc, radio_connection.cFlush(), len);
                 }
                 else
-                   radio_connection.flush();
+                   radio_connection.cFlush();
                 //   std::cerr << "received whole music part: " << std::endl;
              } else {
 
                 if (meta_size == 0) {
                    radio_connection.receiveMessage(1);
-                   meta_size = (size_t) (radio_connection.flush()[0] * 16);
+                   meta_size = (size_t) (radio_connection.cFlush()[0] * 16);
                 }
                 else {
                    received_meta += radio_connection.receiveMessage(size_t(meta_size - received_meta));
@@ -211,11 +222,11 @@ public:
           else {
              radio_connection.receiveMessage();
              size_t len = radio_connection.size();
-             write(outdesc, radio_connection.flush(), len);
+             write(outdesc, radio_connection.cFlush(), len);
           }
 
     }
 };
-
+}
 
 #endif //SIECI2_PLAYER_H

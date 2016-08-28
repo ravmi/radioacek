@@ -1,9 +1,5 @@
-//
-// Created by rm on 31.05.16.
-//
-
-#ifndef SIK_TIMER_H
-#define SIK_TIMER_H
+#ifndef RADIOACEK_TIMER_H
+#define RADIOACEK_TIMER_H
 
 #include <ctime>
 
@@ -12,6 +8,7 @@ private:
     time_t start_time;
     double delay_time;
 public:
+    Timer() = delete;
     Timer(double delay) {
        time(&start_time);
        delay_time = delay;

@@ -6,10 +6,9 @@
 #define SIK_REMOTEPLAYER_H
 
 
-#include "udp_connection.h"
-#include "ParseException.h"
-#include "RemotePlayerException.h"
-#include "tcp_connection.h"
+#include <radioacek/udp_connection.h>
+#include <radioacek/exceptions.h>
+#include <radioacek/tcp_connection.h>
 #include <radioacek/listener.h>
 #include <thread>
 #include <regex>
@@ -19,11 +18,7 @@
 #include <boost/regex.hpp>
 #include <time.h>
 
-using std::string;
-using std::cout;
-using std::cerr;
-using std::endl;
-using std::stoi;
+using namespace std;
 namespace radioacek {
 class RemotePlayer {
 
@@ -117,13 +112,13 @@ public:
 
           }
        }
-       catch (exception &e) {
+       catch (std::exception &e) {
           try {
              t->telnet->sendMessage(string("ERROR: player ") + to_string(t->id) + " " + e.what() + string("\n"));
              t->active.store(false);
              return;
           }
-          catch (exception &e) {
+          catch (std::exception &e) {
              t->active.store(false);
              return;
           }

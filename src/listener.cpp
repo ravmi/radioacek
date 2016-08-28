@@ -10,7 +10,7 @@
 #include <cstring>
 #include <cerrno>
 
-#include <radioacek/ConnectionError.h>
+#include <radioacek/exceptions.h>
 #include <radioacek/listener.h>
 
 namespace radioacek {
