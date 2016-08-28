@@ -34,7 +34,7 @@ int Listener::listen(int timeout) {
         while (next_to_listen < (int)ears.size()) {
             if (hears(ears[next_to_listen])) {
                 forget(ears[next_to_listen]);
-                return ears[next_to_listen++].fd;
+                return next_to_listen++;
             }
             next_to_listen = (next_to_listen + 1) % ears.size();
         }

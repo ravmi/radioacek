@@ -29,7 +29,7 @@ class Listener {
         Listener() = delete;
         Listener(const std::vector<int>& descriptors);
 
-        /* Returns the socket that received an event or -1 if timeout */
+        /* Returns the index of socket that received an event or -1 if timeout */
         int listen(int timeout = -1/* default infinite timeout */);
 };
 }
