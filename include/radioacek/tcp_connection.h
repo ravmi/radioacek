@@ -10,6 +10,7 @@
 #define RADIO_ACEK_TCP_CONNECTION
 
 #include <string>
+#include <iostream>
 namespace radioacek {
 
 class TCPMediator {
@@ -39,6 +40,7 @@ class TCPConnection {
         /* +1 for \0 in c string */
         char buffer_[BUFFER_SIZE + 1];
         size_t buffer_free_index = 0;
+        bool mocked_ = false;
 
     public:
         TCPConnection() = default;
@@ -70,6 +72,8 @@ class TCPConnection {
         char* cFlush();
         char* c_flush();
         std::string stringFlush();
+        /* will make receiveMessage and sendMessage do nothing */
+        void mock();
 };
 }
 

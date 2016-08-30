@@ -2,6 +2,7 @@
 #include<unistd.h>
 #include<netdb.h>
 #include<string>
+#include<iostream>
 
 #include <radioacek/tcp_connection.h>
 #include <radioacek/exceptions.h>
@@ -89,6 +90,8 @@ TCPConnection::TCPConnection(TCPMediator &listener) {
 
 ssize_t TCPConnection::sendMessage(string message) {
     assert(connected_);
+    if(mocked_)
+        return 0;
     size_t length = message.size();
     const char *c_message = message.c_str();
     ssize_t ret = write(socket_, c_message, length);
@@ -100,6 +103,8 @@ ssize_t TCPConnection::sendMessage(string message) {
 
 ssize_t TCPConnection::sendMessage(const char *message, size_t length) {
     assert(connected_);
+    if(mocked_)
+        return 0;
     int written = write(socket_, message, length);
     if(written < 0)
         throw ConnectionError(strerror(errno));
@@ -108,6 +113,8 @@ ssize_t TCPConnection::sendMessage(const char *message, size_t length) {
 
 size_t TCPConnection::receiveMessage(size_t size) {
     assert(connected_);
+    if(mocked_)
+        return 0;
     if (size == 0)
         size = BUFFER_SIZE - buffer_free_index;
     if (size > (BUFFER_SIZE - buffer_free_index))
@@ -157,5 +164,8 @@ string TCPConnection::stringFlush() {
     size_t length = buffer_free_index;
     buffer_free_index = 0;
     return string(buffer_, length);
+}
+void TCPConnection::mock() {
+    mocked_ = true;
 }
 }

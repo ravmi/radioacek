@@ -1,89 +1,67 @@
-//
-// Created by rm on 30.05.16.
-//
+#ifndef RADIOACEK_REMOTE_COLLECTION
+#define RADIOACEK_REMOTE_COLLECTION
 
-#ifndef SIK_REMOTEPLAYERVECTOR_H
-#define SIK_REMOTEPLAYERVECTOR_H
-
-
-#include "RemotePlayer.h"
+#include <radioacek/remote_player.h>
 #include <vector>
-
+#include <boost/regex.h>
 
 namespace radioacek {
+
 class RemotePlayerCollection {
+    private:
+        std::vector<std::shared_ptr<RemotePlayer> > rplayers;
+        const std::string start_regex = 
+            "START (\\S+) (.* (\\S+) (\\d{1,5}) \\S+)";
+        const std::string at_regex = 
+            "AT (\\d{1,2})[.](\\d{1,2}) (\\d{1,9}+) (\\S+) (.* (\\S+) (\\d{1,5}) \\S+)";
+        const std::string play_pause_quit_title_regex =
+            "(?:(PAUSE|PLAY|QUIT|TITLE) (\\d{1,5}))";
 
-private:
-    std::vector<std::shared_ptr<RemotePlayer> > rplayers;
+        int it;
 
-    int it;
-public:
-    RemotePlayerCollection() {
-       it = 0;
-    }
+    public:
 
-    /* Cleans itself */
-    int insert(string server, int port, string command, std::shared_ptr<TCPConnection> telnet) {
-       while (it != rplayers.size()) {
+        RemotePlayerCollection() {
+            it = 0;
+        }
 
-          if (!rplayers[it]->is_active()) {
-             rplayers[it] = std::make_shared<RemotePlayer>(server, port, command, it, telnet);
-             break;
-          }
-          else ++it;
-       }
-       int ret = it;
-       if (it == rplayers.size()) {
-          rplayers.push_back(std::make_shared<RemotePlayer>(server, port, command, it, telnet));
-          it = 0;
+        bool parse_start(
+                const std::string to_parse,
+                std::string& host,
+                std::string& arguments,
+                int& port);
 
-       }
-       return ret;
+        bool parse_ppqt(
+                const std::string to_parse,
+                std::string& command_name,
+                int& id);
 
-    }
-    int insert(string server, int port, string command, int hour, int minutes, int time, std::shared_ptr<TCPConnection> telnet) {
-       while (it != rplayers.size()) {
-
-          if (!rplayers[it]->is_active()) {
-             rplayers[it] = (std::make_shared<RemotePlayer>(server, port, command, it, telnet, hour, minutes, time));
-             break;
-          }
-          else ++it;
-       }
-       int ret = it;
-       if (it == rplayers.size()) {
-          rplayers.push_back((std::make_shared<RemotePlayer>(server, port, command, it, telnet, hour, minutes, time)));
-          it = 0;
-
-       }
-       return ret;
-
-    }
+        bool parse_at(
+                const std::string to_parse,
+                int& hour,
+                int& minutes,
+                int& time_to_die,
+                std::string& host,
+                std::string& arguments,
+                int& port);
 
 
-    bool active(unsigned int i) {
-       int size = rplayers.size();
-       if(i < rplayers.size())
-          return rplayers[i]->is_active();
-       else {
-          return false;
-       }
+        /* also cleans inactive players */
+        int insert(
+                std::string server,
+                int port,
+                std::string command,
+                std::shared_ptr<TCPConnection> telnet,
+                int hour = 0,
+                int minutes = 0,
+                int time_to_die = -1);
 
-    }
+        bool active(unsigned int index);
 
-    std::shared_ptr<RemotePlayer> get(unsigned int i) {
-       if (i > rplayers.size())
-          throw RemotePlayerException(i, "Wrong index");
-       return (rplayers[i]);
-    }
+        std::shared_ptr<RemotePlayer> get(unsigned int index);
 
-
-
-
-
-
+        /* manages remote players waiting for execution and timeout */
+        void cleanup();
 };
 }
-
-
-#endif //SIK_REMOTEPLAYERVECTOR_H
+#endif

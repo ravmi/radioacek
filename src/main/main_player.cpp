@@ -1,9 +1,9 @@
-// @TODO run ssh specifying what shell to use
 
 #include <iostream>
 #include <radioacek/tcp_connection.h>
 #include <radioacek/player.h>
 #include <fstream>
+#include <radioacek/exceptions.h>
 
 #include <fcntl.h>
 
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
     }
 
 
-    string path(c_path);
+    string path = string(c_path);
 
 
     Player rad(c_file, metadata);
@@ -90,7 +90,7 @@ int main(int argc, char **argv) {
         exit(0);
     }
     catch (exception &e) {
-        cerr << e.what() << ", are you sure arguments are ok?" << endl;
+        cout << e.what() << ", are you sure arguments are ok?" << endl;
         exit(1);
     }
     try {

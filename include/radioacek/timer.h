@@ -22,7 +22,6 @@ class Timer {
         }
 
         bool passed() {
-            assert(time_to_pass > 0.0);
             auto end = std::chrono::system_clock::now();
             std::chrono::duration<double> elapsed_seconds = end-start;
             return elapsed_seconds.count() >= time_to_pass;
@@ -37,6 +36,10 @@ class Timer {
             auto end = std::chrono::system_clock::now();
             std::chrono::duration<double> elapsed_seconds = end-start;
             return elapsed_seconds.count();
+        }
+        void reinit(double seconds_to_pass = 0.0) {
+            start = std::chrono::system_clock::now();
+            this->time_to_pass = seconds_to_pass;
         }
 };
 }
